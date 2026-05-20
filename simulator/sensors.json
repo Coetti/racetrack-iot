@@ -1,0 +1,21 @@
+{
+  "cars": [
+    {
+      "id": 1,
+      "name": "Car 01",
+      "sensors": [
+        {
+          "id": "engine_temp",
+          "type": "temperature",
+          "unit": "Celsius",
+          "topic": "car/1/engine_temp",
+          "frequency_ms": 1000,
+          "min": 0,
+          "max": 130,
+          "target": 82,
+          "simulation": "ramp"
+        }
+      ]
+    }
+  ]
+}
