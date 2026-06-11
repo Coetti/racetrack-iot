@@ -14,6 +14,7 @@ BROKER_PORT = 1883
 CONFIG_PATH = Path(__file__).with_name("sensors.json")
 SIMULATION_STARTED = False
 SIMULATION_LOCK = threading.Lock()
+SENSOR_STATE = {}
 
 
 def clamp(value, min_val, max_val):
@@ -52,11 +53,18 @@ def simulate_ramp_noise(t, min_val, max_val, target):
     return warmup + tyre_load + track_noise
 
 
-def simulate_fuel_burn(t, min_val, max_val, phase):
+def simulate_fuel_burn(t, min_val, max_val, phase, state_key):
+    state = SENSOR_STATE.setdefault(state_key, {"fuel": max_val, "last_t": t})
+    elapsed = max(0, t - state["last_t"])
     burn_rate = 0.09 + (phase * 0.01)
-    cycle = max_val - ((t * burn_rate) % (max_val - min_val + 1))
-    slosh = math.sin(t * 1.4 + phase) * 0.8
-    return cycle + slosh
+
+    state["fuel"] = max(min_val, state["fuel"] - elapsed * burn_rate)
+    state["last_t"] = t
+
+    if state["fuel"] <= 4:
+        state["fuel"] = max_val
+
+    return state["fuel"]
 
 
 def simulate_value(sensor, t, car_id):
@@ -65,6 +73,7 @@ def simulate_value(sensor, t, car_id):
     target = sensor.get("target")
     phase = car_id * 0.8
     simulation = sensor.get("simulation", "stable_noise")
+    state_key = (car_id, sensor["id"])
 
     if simulation == "sinusoidal":
         value = simulate_sinusoidal(t, min_val, max_val, phase)
@@ -73,7 +82,7 @@ def simulate_value(sensor, t, car_id):
     elif simulation == "ramp_noise":
         value = simulate_ramp_noise(t, min_val, max_val, target)
     elif simulation == "fuel_burn":
-        value = simulate_fuel_burn(t, min_val, max_val, phase)
+        value = simulate_fuel_burn(t, min_val, max_val, phase, state_key)
     else:
         value = simulate_stable_noise(t, min_val, max_val, target)
 

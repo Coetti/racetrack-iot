@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import mqtt from "mqtt";
 import {
   CartesianGrid,
-  Legend,
   Line,
   LineChart,
   ResponsiveContainer,
@@ -517,22 +516,36 @@ function RaceView({ car, readings, alerts, activeAlerts }) {
   );
 }
 
-function TelemetryChart({ car, history }) {
-  const sensors = car.sensors.filter((sensor) => CHART_SENSOR_IDS.includes(sensor.id));
+function MetricChart({ sensor, history }) {
+  const values = history.map((item) => item[sensor.id]).filter((value) => typeof value === "number");
+  const latest = values.at(-1);
+  const min = values.length > 0 ? Math.min(...values) : sensor.min;
+  const max = values.length > 0 ? Math.max(...values) : sensor.max;
+  const padding = Math.max((max - min) * 0.2, sensor.unit === "bar" ? 0.2 : 4);
 
   return (
     <section className="border border-white/10 bg-zinc-950 p-4">
-      <div className="mb-4">
-        <h2 className="text-sm font-black uppercase tracking-[0.25em] text-white">Historico em tempo real</h2>
-        <p className="text-xs text-zinc-500">Principais metricas recebidas via MQTT</p>
+      <div className="mb-3 flex items-start justify-between gap-4">
+        <div>
+          <p className="text-[10px] font-black uppercase tracking-[0.25em] text-zinc-500">{sensor.label}</p>
+          <p className="mt-1 text-3xl font-black text-white">
+            {latest == null ? "--" : latest.toFixed(sensor.unit === "bar" ? 2 : 1)}
+            <span className="ml-2 text-sm text-zinc-500">{sensor.unit}</span>
+          </p>
+        </div>
+        <span className="h-3 w-3 rounded-full" style={{ backgroundColor: CHART_COLORS[sensor.id] }} />
       </div>
 
-      <div className="h-80">
+      <div className="h-48">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={history}>
-            <CartesianGrid stroke="#27272a" strokeDasharray="4 4" />
+            <CartesianGrid stroke="#27272a" strokeDasharray="3 6" />
             <XAxis dataKey="time" tick={{ fill: "#a1a1aa", fontSize: 11 }} />
-            <YAxis tick={{ fill: "#a1a1aa", fontSize: 11 }} width={38} />
+            <YAxis
+              domain={[Math.max(sensor.min, min - padding), Math.min(sensor.max, max + padding)]}
+              tick={{ fill: "#a1a1aa", fontSize: 11 }}
+              width={42}
+            />
             <Tooltip
               contentStyle={{
                 background: "#050505",
@@ -541,21 +554,38 @@ function TelemetryChart({ car, history }) {
                 color: "#fff",
               }}
             />
-            <Legend wrapperStyle={{ fontSize: 12 }} />
-            {sensors.map((sensor) => (
-              <Line
-                key={sensor.id}
-                type="monotone"
-                dataKey={sensor.id}
-                name={sensor.label}
-                stroke={CHART_COLORS[sensor.id]}
-                dot={false}
-                strokeWidth={2}
-                connectNulls
-              />
-            ))}
+            <Line
+              type="monotone"
+              dataKey={sensor.id}
+              name={sensor.label}
+              stroke={CHART_COLORS[sensor.id]}
+              dot={false}
+              strokeWidth={2.5}
+              isAnimationActive={false}
+            />
           </LineChart>
         </ResponsiveContainer>
+      </div>
+    </section>
+  );
+}
+
+function TelemetryChart({ car, history }) {
+  const sensors = car.sensors.filter((sensor) => CHART_SENSOR_IDS.includes(sensor.id));
+
+  return (
+    <section className="space-y-4">
+      <div className="border border-white/10 bg-zinc-950 p-4">
+        <h2 className="text-sm font-black uppercase tracking-[0.25em] text-white">Historico em tempo real</h2>
+        <p className="mt-1 text-xs text-zinc-500">
+          Cada metrica usa sua propria escala para evitar distorcoes entre km/h, temperatura, porcentagem e bar.
+        </p>
+      </div>
+
+      <div className="grid gap-4 xl:grid-cols-2">
+        {sensors.map((sensor) => (
+          <MetricChart key={sensor.id} sensor={sensor} history={history} />
+        ))}
       </div>
     </section>
   );
@@ -774,20 +804,24 @@ export default function App() {
       }));
 
       if (CHART_SENSOR_IDS.includes(parsed.sensorId)) {
-        setHistoryByCar((current) => ({
-          ...current,
-          [parsed.carId]: [
-            ...((current[parsed.carId] ?? []).slice(-39)),
-            {
-              time: new Date(parsed.timestamp).toLocaleTimeString("pt-BR", {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-              }),
-              [parsed.sensorId]: parsed.value,
-            },
-          ],
-        }));
+        setHistoryByCar((current) => {
+          const previousHistory = current[parsed.carId] ?? [];
+          const previousPoint = previousHistory.at(-1) ?? {};
+          const nextPoint = {
+            ...previousPoint,
+            time: new Date(parsed.timestamp).toLocaleTimeString("pt-BR", {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            }),
+            [parsed.sensorId]: parsed.value,
+          };
+
+          return {
+            ...current,
+            [parsed.carId]: [...previousHistory.slice(-59), nextPoint],
+          };
+        });
       }
     });
 
