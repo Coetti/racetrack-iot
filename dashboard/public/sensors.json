@@ -15,8 +15,61 @@
           "frequency_ms": 100,
           "min": 90,
           "max": 315,
-          "simulation": "sinusoidal",
+          "simulation": "physics",
           "position": { "x": 50, "y": 18 }
+        },
+        {
+          "id": "throttle",
+          "label": "Acelerador",
+          "type": "throttle",
+          "unit": "%",
+          "topic": "car/1/throttle",
+          "frequency_ms": 100,
+          "min": 0,
+          "max": 100,
+          "simulation": "physics",
+          "position": { "x": 90, "y": 18 }
+        },
+        {
+          "id": "brake",
+          "label": "Freio",
+          "type": "brake",
+          "unit": "%",
+          "topic": "car/1/brake",
+          "frequency_ms": 100,
+          "min": 0,
+          "max": 100,
+          "simulation": "physics",
+          "position": { "x": 90, "y": 18 }
+        },
+        {
+          "id": "rpm",
+          "label": "RPM",
+          "type": "rpm",
+          "unit": "rpm",
+          "topic": "car/1/rpm",
+          "frequency_ms": 100,
+          "min": 3500,
+          "max": 7800,
+          "simulation": "physics",
+          "alert": {
+            "operator": ">",
+            "threshold": 7800,
+            "message": "RPM limite – risco de motor"
+          },
+          "position": { "x": 90, "y": 18 }
+        },
+        {
+          "id": "gear",
+          "label": "Marcha",
+          "type": "gear",
+          "unit": "",
+          "topic": "car/1/gear",
+          "frequency_ms": 100,
+          "min": 1,
+          "max": 7,
+          "simulation": "physics",
+          "position": { "x": 90, "y": 18 }
         },
         {
           "id": "engine_temp",
@@ -34,7 +87,7 @@
             "threshold": 112,
             "message": "Risco de superaquecimento"
           },
-          "position": { "x": 13, "y": 48 }
+          "position": { "x": 13, "y": 62 }
         },
         {
           "id": "fuel_level",
@@ -50,25 +103,6 @@
             "operator": "<",
             "threshold": 18,
             "message": "Programar pit stop para abastecimento"
-          },
-          "position": { "x": 13, "y": 62 }
-        },
-
-        {
-          "id": "oil_pressure",
-          "label": "Pressao de oleo",
-          "type": "pressure",
-          "unit": "bar",
-          "topic": "car/1/oil_pressure",
-          "frequency_ms": 1000,
-          "min": 1.8,
-          "max": 6.5,
-          "target": 4.8,
-          "simulation": "stable_noise",
-          "alert": {
-            "operator": "<",
-            "threshold": 2.4,
-            "message": "Pressao de oleo baixa"
           },
           "position": { "x": 13, "y": 76 }
         },
@@ -215,6 +249,24 @@
             "message": "Pneu superaquecido"
           },
           "position": { "x": 82, "y": 80 }
+        },
+        {
+          "id": "oil_pressure",
+          "label": "Pressao de oleo",
+          "type": "pressure",
+          "unit": "bar",
+          "topic": "car/1/oil_pressure",
+          "frequency_ms": 1000,
+          "min": 1.8,
+          "max": 6.5,
+          "target": 4.8,
+          "simulation": "stable_noise",
+          "alert": {
+            "operator": "<",
+            "threshold": 2.4,
+            "message": "Pressao de oleo baixa"
+          },
+          "position": { "x": 13, "y": 90 }
         }
       ]
     },
@@ -233,8 +285,61 @@
           "frequency_ms": 250,
           "min": 85,
           "max": 305,
-          "simulation": "sinusoidal",
+          "simulation": "physics",
           "position": { "x": 50, "y": 18 }
+        },
+        {
+          "id": "throttle",
+          "label": "Acelerador",
+          "type": "throttle",
+          "unit": "%",
+          "topic": "car/2/throttle",
+          "frequency_ms": 100,
+          "min": 0,
+          "max": 100,
+          "simulation": "physics",
+          "position": { "x": 90, "y": 18 }
+        },
+        {
+          "id": "brake",
+          "label": "Freio",
+          "type": "brake",
+          "unit": "%",
+          "topic": "car/2/brake",
+          "frequency_ms": 100,
+          "min": 0,
+          "max": 100,
+          "simulation": "physics",
+          "position": { "x": 90, "y": 18 }
+        },
+        {
+          "id": "rpm",
+          "label": "RPM",
+          "type": "rpm",
+          "unit": "rpm",
+          "topic": "car/2/rpm",
+          "frequency_ms": 100,
+          "min": 3500,
+          "max": 7800,
+          "simulation": "physics",
+          "alert": {
+            "operator": ">",
+            "threshold": 7800,
+            "message": "RPM limite – risco de motor"
+          },
+          "position": { "x": 90, "y": 18 }
+        },
+        {
+          "id": "gear",
+          "label": "Marcha",
+          "type": "gear",
+          "unit": "",
+          "topic": "car/2/gear",
+          "frequency_ms": 100,
+          "min": 1,
+          "max": 7,
+          "simulation": "physics",
+          "position": { "x": 90, "y": 18 }
         },
         {
           "id": "engine_temp",
@@ -252,7 +357,7 @@
             "threshold": 112,
             "message": "Risco de superaquecimento"
           },
-          "position": { "x": 13, "y": 48 }
+          "position": { "x": 13, "y": 62 }
         },
         {
           "id": "fuel_level",
@@ -431,7 +536,7 @@
             "threshold": 2.4,
             "message": "Pressao de oleo baixa"
           },
-          "position": { "x": 13, "y": 62 }
+          "position": { "x": 13, "y": 90 }
         }
       ]
     },
@@ -450,8 +555,61 @@
           "frequency_ms": 250,
           "min": 95,
           "max": 325,
-          "simulation": "sinusoidal",
+          "simulation": "physics",
           "position": { "x": 50, "y": 18 }
+        },
+        {
+          "id": "throttle",
+          "label": "Acelerador",
+          "type": "throttle",
+          "unit": "%",
+          "topic": "car/3/throttle",
+          "frequency_ms": 100,
+          "min": 0,
+          "max": 100,
+          "simulation": "physics",
+          "position": { "x": 90, "y": 18 }
+        },
+        {
+          "id": "brake",
+          "label": "Freio",
+          "type": "brake",
+          "unit": "%",
+          "topic": "car/3/brake",
+          "frequency_ms": 100,
+          "min": 0,
+          "max": 100,
+          "simulation": "physics",
+          "position": { "x": 90, "y": 18 }
+        },
+        {
+          "id": "rpm",
+          "label": "RPM",
+          "type": "rpm",
+          "unit": "rpm",
+          "topic": "car/3/rpm",
+          "frequency_ms": 100,
+          "min": 3500,
+          "max": 7800,
+          "simulation": "physics",
+          "alert": {
+            "operator": ">",
+            "threshold": 7800,
+            "message": "RPM limite – risco de motor"
+          },
+          "position": { "x": 90, "y": 18 }
+        },
+        {
+          "id": "gear",
+          "label": "Marcha",
+          "type": "gear",
+          "unit": "",
+          "topic": "car/3/gear",
+          "frequency_ms": 100,
+          "min": 1,
+          "max": 7,
+          "simulation": "physics",
+          "position": { "x": 90, "y": 18 }
         },
         {
           "id": "engine_temp",
@@ -469,7 +627,7 @@
             "threshold": 112,
             "message": "Risco de superaquecimento"
           },
-          "position": { "x": 13, "y": 48 }
+          "position": { "x": 13, "y": 62 }
         },
         {
           "id": "fuel_level",
@@ -486,7 +644,7 @@
             "threshold": 18,
             "message": "Programar pit stop para abastecimento"
           },
-          "position": { "x": 13, "y": 62 }
+          "position": { "x": 13, "y": 76 }
         },
         {
           "id": "tyre_pressure_fl",
@@ -648,7 +806,7 @@
             "threshold": 2.4,
             "message": "Pressao de oleo baixa"
           },
-          "position": { "x": 13, "y": 62 }
+          "position": { "x": 13, "y": 90 }
         }
       ]
     }

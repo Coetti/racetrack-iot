@@ -12,8 +12,25 @@ import {
 
 const BROKER_URL = "ws://localhost:9001";
 const CONFIG_URL = "/sensors.json";
-const CHART_SENSOR_IDS = ["speed", "engine_temp", "fuel_level", "oil_pressure"];
-const KEY_SENSOR_IDS = ["speed", "engine_temp", "fuel_level", "oil_pressure"];
+const CHART_SENSOR_IDS = [
+  "speed",
+  "throttle",
+  "brake",
+  "rpm",
+  "engine_temp",
+  "fuel_level",
+  "oil_pressure",
+];
+const KEY_SENSOR_IDS = [
+  "speed",
+  "throttle",
+  "brake",
+  "rpm",
+  "gear",
+  "engine_temp",
+  "fuel_level",
+  "oil_pressure",
+];
 const TAB_ITEMS = [
   { id: "race", label: "Corrida" },
   { id: "telemetry", label: "Telemetria" },
@@ -655,15 +672,26 @@ function getFuelColor(pct) {
   return "#ef4444";
 }
 
-function SensorBar({ label, unit, value, min, max, colorFn, teamColor }) {
+function SensorBar({
+  label,
+  unit,
+  value,
+  min,
+  max,
+  colorFn,
+  teamColor,
+  active,
+}) {
   const pct = Math.min(Math.max((value - min) / (max - min), 0), 1);
   const barColor = colorFn(pct);
-  const isAlert = pct >= 0.9;
 
+  useEffect(() => {
+    console.log("SensorBar, active", active);
+  }, [active]);
   return (
     <div
       className={`relative rounded-sm border px-3 py-2 backdrop-blur w-72 ${
-        isAlert ? "border-red-400 bg-red-600/20" : "border-white/10 bg-black/80"
+        active ? "border-red-400 bg-red-600/20" : "border-white/10 bg-black/80"
       }`}
       style={{ "--team-color": teamColor }}
     >
@@ -700,7 +728,7 @@ function SensorBar({ label, unit, value, min, max, colorFn, teamColor }) {
         <span className="text-[8px] text-zinc-600">{max}</span>
       </div>
 
-      {isAlert && (
+      {active && (
         <div
           className="absolute inset-0 rounded-sm pointer-events-none"
           style={{ boxShadow: "inset 0 0 8px #ef444466" }}
@@ -867,7 +895,231 @@ function SpeedCard({ value, teamColor }) {
   );
 }
 
-function RaceCarStage({ car, readings, alerts }) {
+function RPMRamp({ value, teamColor }) {
+  const MIN_RPM = 0;
+  const MAX_RPM = 8_000;
+  const TICKS = [0, 1_000, 2_000, 3_000, 4_000, 5_000, 6_000, 7_000, 8_000];
+  const pct = Math.min(Math.max((value - MIN_RPM) / (MAX_RPM - MIN_RPM), 0), 1);
+
+  function getRpmColor(p) {
+    if (p < 0.45) return "#3b82f6";
+    if (p < 0.7) return "#06b6d4";
+    if (p < 0.88) return "#eab308";
+    return "#ef4444";
+  }
+
+  const color = getRpmColor(pct);
+  const W = 300,
+    H = 90,
+    PAD_LEFT = 10,
+    PAD_RIGHT = 10;
+  const rampW = W - PAD_LEFT - PAD_RIGHT;
+  const TOP_LEFT_Y = H - 12,
+    BOT_LEFT_Y = H,
+    TOP_RIGHT_Y = 0,
+    BOT_RIGHT_Y = H;
+  const fillX = PAD_LEFT + pct * rampW;
+  const fillTopY = TOP_LEFT_Y + (TOP_RIGHT_Y - TOP_LEFT_Y) * pct;
+
+  const fillPoly = [
+    [PAD_LEFT, TOP_LEFT_Y],
+    [fillX, fillTopY],
+    [fillX, BOT_RIGHT_Y],
+    [PAD_LEFT, BOT_LEFT_Y],
+  ]
+    .map((p) => p.join(","))
+    .join(" ");
+
+  const rampPoly = [
+    [PAD_LEFT, TOP_LEFT_Y],
+    [W - PAD_RIGHT, TOP_RIGHT_Y],
+    [W - PAD_RIGHT, BOT_RIGHT_Y],
+    [PAD_LEFT, BOT_LEFT_Y],
+  ]
+    .map((p) => p.join(","))
+    .join(" ");
+
+  return (
+    <div className="relative w-full">
+      <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ display: "block" }}>
+        <defs>
+          <linearGradient id="rpmGrad" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0%" stopColor={color} stopOpacity="0.3" />
+            <stop offset="100%" stopColor={color} stopOpacity="1" />
+          </linearGradient>
+          <filter id="glowRpm">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        <polygon points={rampPoly} fill="#1f2937" opacity="0.6" />
+        <polygon
+          points={fillPoly}
+          fill="url(#rpmGrad)"
+          filter="url(#glowRpm)"
+        />
+
+        {TICKS.map((t) => {
+          const p = (t - MIN_RPM) / (MAX_RPM - MIN_RPM);
+          const x = PAD_LEFT + p * rampW;
+          const topY = TOP_LEFT_Y + (TOP_RIGHT_Y - TOP_LEFT_Y) * p;
+          return (
+            <line
+              key={t}
+              x1={x}
+              y1={topY}
+              x2={x}
+              y2={BOT_RIGHT_Y}
+              stroke="#ffffff22"
+              strokeWidth="1"
+            />
+          );
+        })}
+
+        <polygon
+          points={rampPoly}
+          fill="none"
+          stroke="#ffffff18"
+          strokeWidth="1"
+        />
+        <line
+          x1={fillX}
+          y1={fillTopY}
+          x2={fillX}
+          y2={BOT_RIGHT_Y}
+          stroke={color}
+          strokeWidth="2"
+          filter="url(#glowRpm)"
+          opacity={pct > 0.01 ? 1 : 0}
+        />
+      </svg>
+
+      <div className="relative mt-1" style={{ height: 14 }}>
+        {TICKS.map((t) => {
+          const p = (t - MIN_RPM) / (MAX_RPM - MIN_RPM);
+          const xPx = PAD_LEFT + p * rampW;
+          const xPct = (xPx / W) * 100;
+          return (
+            <span
+              key={t}
+              className="absolute text-[9px] font-bold text-zinc-500 -translate-x-1/2"
+              style={{ left: `${xPct}%` }}
+            >
+              {t >= 1000 ? `${t / 1000}k` : t}
+            </span>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function PedalBar({ label, value, barColor }) {
+  const pct = Math.min(Math.max(value / 100, 0), 1);
+  return (
+    <div className="flex-1">
+      <p className="text-[9px] font-black uppercase tracking-[0.25em] text-zinc-400 mb-1">
+        {label}
+      </p>
+      <p className="text-sm font-black leading-none text-white mb-2">
+        {Math.round(value)}
+        <span className="ml-1 text-[9px] text-zinc-400">%</span>
+      </p>
+      <div className="relative h-2 w-full rounded-full bg-zinc-800 overflow-hidden">
+        <div
+          className="absolute left-0 top-0 h-full rounded-full transition-all duration-150"
+          style={{
+            width: `${pct * 100}%`,
+            backgroundColor: barColor,
+            boxShadow: `0 0 6px ${barColor}99`,
+          }}
+        />
+        {[0.25, 0.5, 0.75].map((t) => (
+          <div
+            key={t}
+            className="absolute top-0 h-full w-px bg-zinc-600/60"
+            style={{ left: `${t * 100}%` }}
+          />
+        ))}
+      </div>
+      <div className="flex justify-between mt-1">
+        <span className="text-[8px] text-zinc-600">0</span>
+        <span className="text-[8px] text-zinc-600">100</span>
+      </div>
+    </div>
+  );
+}
+
+function DrivingPanel({ readings, teamColor }) {
+  const color = teamColor ?? "#e10600";
+  const speed = readings["speed"]?.value ?? 0;
+  const gear = readings["gear"]?.value ?? 1;
+  const rpm = readings["rpm"]?.value ?? 3000;
+  const throttle = readings["throttle"]?.value ?? 0;
+  const brake = readings["brake"]?.value ?? 0;
+
+  return (
+    <div
+      className="relative rounded-sm border border-white/10 bg-black/80 backdrop-blur px-4 py-3 w-100"
+      style={{ "--team-color": color }}
+    >
+      {/* Accent bar */}
+      <div
+        className="absolute left-0 top-0 h-full w-1 rounded-l-sm"
+        style={{ backgroundColor: color }}
+      />
+
+      {/* Speed + Gear row */}
+      <div className="flex items-start justify-between mb-1 ml-1">
+        <div>
+          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-500 mb-1">
+            Velocidade
+          </p>
+          <div className="flex items-end gap-2">
+            <span className="text-4xl font-black leading-none text-white tabular-nums">
+              {Math.round(speed)}
+            </span>
+            <span className="text-sm text-zinc-400 mb-1">km/h</span>
+          </div>
+        </div>
+
+        <div>
+          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-500 mb-1 text-right">
+            Marcha
+          </p>
+          <div className="flex items-center justify-center w-14 h-14 rounded-sm border border-white/20 bg-zinc-900">
+            <span className="text-3xl font-black leading-none text-white tabular-nums">
+              {gear}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* RPM label + ramp */}
+      <div className="ml-1 mb-1">
+        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-500 mb-0">
+          RPM
+        </p>
+        <p className="text-lg font-black leading-none text-white mb-1">
+          {Math.round(rpm).toLocaleString()}
+        </p>
+      </div>
+      <RPMRamp value={rpm} teamColor={color} />
+
+      {/* Throttle + Brake */}
+      <div className="flex gap-4 mt-3 ml-1">
+        <PedalBar label="Acelerador" value={throttle} barColor="#f97316" />
+        <PedalBar label="Freio" value={brake} barColor="#ef4444" />
+      </div>
+    </div>
+  );
+}
+
+function RaceCarStage({ car, readings, alerts, history }) {
   const overlaySensors = car.sensors.filter((sensor) =>
     KEY_SENSOR_IDS.includes(sensor.id),
   );
@@ -900,11 +1152,17 @@ function RaceCarStage({ car, readings, alerts }) {
         className="absolute inset-0 m-auto w-full h-full object-cover drop-shadow-[0_30px_60px_rgba(0,0,0,0.7)]"
       />
 
-      <div className="w-86 absolute left-10 top-20">
-        <SpeedCard
-          value={readings["speed"]?.value ?? 0}
-          teamColor={car.color}
-        />
+      <div className="absolute left-4 top-10 z-10">
+        <DrivingPanel readings={readings} teamColor={car.color} />
+      </div>
+
+      <div className="absolute right-4 top-30 z-10 w-96 flex flex-col gap-2">
+        {["throttle", "brake"]
+          .map((id) => car.sensors.find((s) => s.id === id))
+          .filter(Boolean)
+          .map((sensor) => (
+            <MetricChart key={sensor.id} sensor={sensor} history={history} />
+          ))}
       </div>
 
       {TYRE_CORNERS.map((corner) => (
@@ -938,7 +1196,7 @@ function RaceCarStage({ car, readings, alerts }) {
               top: `${sensor.position.y}%`,
             }}
           >
-            {isSensorBar ? (
+            {isSensorBar && (
               <SensorBar
                 label={sensor.label}
                 unit={sensor.unit}
@@ -949,9 +1207,8 @@ function RaceCarStage({ car, readings, alerts }) {
                   sensor.id === "fuel_level" ? getFuelColor : getBarColor
                 }
                 teamColor={car.color ?? "#e10600"}
+                active={active}
               />
-            ) : (
-              <></>
             )}
           </div>
         );
@@ -1025,7 +1282,7 @@ function AlertStrip({ activeAlerts, alerts }) {
   );
 }
 
-function RaceView({ car, readings, alerts, activeAlerts }) {
+function RaceView({ car, readings, alerts, activeAlerts, history }) {
   const keySensors = car.sensors.filter((sensor) =>
     KEY_SENSOR_IDS.includes(sensor.id),
   );
@@ -1034,7 +1291,12 @@ function RaceView({ car, readings, alerts, activeAlerts }) {
     <div className="grid gap-4 xl:grid-cols-[1fr_360px]">
       <div className="space-y-4">
         <AlertStrip activeAlerts={activeAlerts} alerts={alerts} />
-        <RaceCarStage car={car} readings={readings} alerts={alerts} />
+        <RaceCarStage
+          car={car}
+          readings={readings}
+          alerts={alerts}
+          history={history}
+        />
       </div>
 
       <aside className="space-y-4">
@@ -1048,7 +1310,6 @@ function RaceView({ car, readings, alerts, activeAlerts }) {
             />
           ))}
         </div>
-        {/* CompactTyreBoard removido — pneus agora exibidos no RaceCarStage */}
       </aside>
     </div>
   );
@@ -1073,7 +1334,9 @@ function MetricChart({ sensor, history }) {
           <p className="mt-1 text-3xl font-black text-white">
             {latest == null
               ? "--"
-              : latest.toFixed(sensor.unit === "bar" ? 2 : 1)}
+              : sensor.unit === "rpm"
+                ? latest.toFixed(0)
+                : latest.toFixed(sensor.unit === "bar" ? 2 : 1)}
             <span className="ml-2 text-sm text-zinc-500">{sensor.unit}</span>
           </p>
         </div>
@@ -1511,6 +1774,7 @@ export default function App() {
             readings={readings}
             alerts={alerts}
             activeAlerts={activeAlerts}
+            history={history}
           />
         )}
         {activeTab === "telemetry" && (
