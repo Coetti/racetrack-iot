@@ -12,11 +12,64 @@
           "type": "speed",
           "unit": "km/h",
           "topic": "car/1/speed",
-          "frequency_ms": 250,
+          "frequency_ms": 100,
           "min": 90,
           "max": 315,
-          "simulation": "sinusoidal",
+          "simulation": "physics",
           "position": { "x": 50, "y": 18 }
+        },
+        {
+          "id": "throttle",
+          "label": "Acelerador",
+          "type": "throttle",
+          "unit": "%",
+          "topic": "car/1/throttle",
+          "frequency_ms": 100,
+          "min": 0,
+          "max": 100,
+          "simulation": "physics",
+          "position": { "x": 90, "y": 18 }
+        },
+        {
+          "id": "brake",
+          "label": "Freio",
+          "type": "brake",
+          "unit": "%",
+          "topic": "car/1/brake",
+          "frequency_ms": 100,
+          "min": 0,
+          "max": 100,
+          "simulation": "physics",
+          "position": { "x": 90, "y": 18 }
+        },
+        {
+          "id": "rpm",
+          "label": "RPM",
+          "type": "rpm",
+          "unit": "rpm",
+          "topic": "car/1/rpm",
+          "frequency_ms": 100,
+          "min": 3500,
+          "max": 7800,
+          "simulation": "physics",
+          "alert": {
+            "operator": ">",
+            "threshold": 7800,
+            "message": "RPM limite – risco de motor"
+          },
+          "position": { "x": 90, "y": 18 }
+        },
+        {
+          "id": "gear",
+          "label": "Marcha",
+          "type": "gear",
+          "unit": "",
+          "topic": "car/1/gear",
+          "frequency_ms": 100,
+          "min": 1,
+          "max": 7,
+          "simulation": "physics",
+          "position": { "x": 90, "y": 18 }
         },
         {
           "id": "engine_temp",
@@ -29,8 +82,12 @@
           "max": 130,
           "target": 96,
           "simulation": "ramp",
-          "alert": { "operator": ">", "threshold": 112, "message": "Risco de superaquecimento" },
-          "position": { "x": 50, "y": 42 }
+          "alert": {
+            "operator": ">",
+            "threshold": 112,
+            "message": "Risco de superaquecimento"
+          },
+          "position": { "x": 13, "y": 62 }
         },
         {
           "id": "fuel_level",
@@ -42,8 +99,12 @@
           "min": 0,
           "max": 100,
           "simulation": "fuel_burn",
-          "alert": { "operator": "<", "threshold": 18, "message": "Programar pit stop para abastecimento" },
-          "position": { "x": 50, "y": 70 }
+          "alert": {
+            "operator": "<",
+            "threshold": 18,
+            "message": "Programar pit stop para abastecimento"
+          },
+          "position": { "x": 13, "y": 76 }
         },
         {
           "id": "tyre_pressure_fl",
@@ -56,7 +117,11 @@
           "max": 2.5,
           "target": 2.1,
           "simulation": "stable_noise",
-          "alert": { "operator": "<", "threshold": 1.7, "message": "Possivel pneu furado" },
+          "alert": {
+            "operator": "<",
+            "threshold": 1.7,
+            "message": "Possivel pneu furado"
+          },
           "position": { "x": 24, "y": 30 }
         },
         {
@@ -70,7 +135,11 @@
           "max": 2.5,
           "target": 2.1,
           "simulation": "stable_noise",
-          "alert": { "operator": "<", "threshold": 1.7, "message": "Possivel pneu furado" },
+          "alert": {
+            "operator": "<",
+            "threshold": 1.7,
+            "message": "Possivel pneu furado"
+          },
           "position": { "x": 76, "y": 30 }
         },
         {
@@ -84,7 +153,11 @@
           "max": 2.5,
           "target": 2.0,
           "simulation": "stable_noise",
-          "alert": { "operator": "<", "threshold": 1.7, "message": "Possivel pneu furado" },
+          "alert": {
+            "operator": "<",
+            "threshold": 1.7,
+            "message": "Possivel pneu furado"
+          },
           "position": { "x": 24, "y": 72 }
         },
         {
@@ -98,7 +171,11 @@
           "max": 2.5,
           "target": 2.0,
           "simulation": "stable_noise",
-          "alert": { "operator": "<", "threshold": 1.7, "message": "Possivel pneu furado" },
+          "alert": {
+            "operator": "<",
+            "threshold": 1.7,
+            "message": "Possivel pneu furado"
+          },
           "position": { "x": 76, "y": 72 }
         },
         {
@@ -112,7 +189,11 @@
           "max": 120,
           "target": 88,
           "simulation": "ramp_noise",
-          "alert": { "operator": ">", "threshold": 105, "message": "Pneu superaquecido" },
+          "alert": {
+            "operator": ">",
+            "threshold": 105,
+            "message": "Pneu superaquecido"
+          },
           "position": { "x": 18, "y": 38 }
         },
         {
@@ -126,7 +207,11 @@
           "max": 120,
           "target": 90,
           "simulation": "ramp_noise",
-          "alert": { "operator": ">", "threshold": 105, "message": "Pneu superaquecido" },
+          "alert": {
+            "operator": ">",
+            "threshold": 105,
+            "message": "Pneu superaquecido"
+          },
           "position": { "x": 82, "y": 38 }
         },
         {
@@ -140,7 +225,11 @@
           "max": 120,
           "target": 86,
           "simulation": "ramp_noise",
-          "alert": { "operator": ">", "threshold": 105, "message": "Pneu superaquecido" },
+          "alert": {
+            "operator": ">",
+            "threshold": 105,
+            "message": "Pneu superaquecido"
+          },
           "position": { "x": 18, "y": 80 }
         },
         {
@@ -154,7 +243,11 @@
           "max": 120,
           "target": 87,
           "simulation": "ramp_noise",
-          "alert": { "operator": ">", "threshold": 105, "message": "Pneu superaquecido" },
+          "alert": {
+            "operator": ">",
+            "threshold": 105,
+            "message": "Pneu superaquecido"
+          },
           "position": { "x": 82, "y": 80 }
         },
         {
@@ -168,8 +261,12 @@
           "max": 6.5,
           "target": 4.8,
           "simulation": "stable_noise",
-          "alert": { "operator": "<", "threshold": 2.4, "message": "Pressao de oleo baixa" },
-          "position": { "x": 50, "y": 56 }
+          "alert": {
+            "operator": "<",
+            "threshold": 2.4,
+            "message": "Pressao de oleo baixa"
+          },
+          "position": { "x": 13, "y": 90 }
         }
       ]
     },
@@ -188,8 +285,61 @@
           "frequency_ms": 250,
           "min": 85,
           "max": 305,
-          "simulation": "sinusoidal",
+          "simulation": "physics",
           "position": { "x": 50, "y": 18 }
+        },
+        {
+          "id": "throttle",
+          "label": "Acelerador",
+          "type": "throttle",
+          "unit": "%",
+          "topic": "car/2/throttle",
+          "frequency_ms": 100,
+          "min": 0,
+          "max": 100,
+          "simulation": "physics",
+          "position": { "x": 90, "y": 18 }
+        },
+        {
+          "id": "brake",
+          "label": "Freio",
+          "type": "brake",
+          "unit": "%",
+          "topic": "car/2/brake",
+          "frequency_ms": 100,
+          "min": 0,
+          "max": 100,
+          "simulation": "physics",
+          "position": { "x": 90, "y": 18 }
+        },
+        {
+          "id": "rpm",
+          "label": "RPM",
+          "type": "rpm",
+          "unit": "rpm",
+          "topic": "car/2/rpm",
+          "frequency_ms": 100,
+          "min": 3500,
+          "max": 7800,
+          "simulation": "physics",
+          "alert": {
+            "operator": ">",
+            "threshold": 7800,
+            "message": "RPM limite – risco de motor"
+          },
+          "position": { "x": 90, "y": 18 }
+        },
+        {
+          "id": "gear",
+          "label": "Marcha",
+          "type": "gear",
+          "unit": "",
+          "topic": "car/2/gear",
+          "frequency_ms": 100,
+          "min": 1,
+          "max": 7,
+          "simulation": "physics",
+          "position": { "x": 90, "y": 18 }
         },
         {
           "id": "engine_temp",
@@ -202,8 +352,12 @@
           "max": 132,
           "target": 99,
           "simulation": "ramp",
-          "alert": { "operator": ">", "threshold": 112, "message": "Risco de superaquecimento" },
-          "position": { "x": 50, "y": 42 }
+          "alert": {
+            "operator": ">",
+            "threshold": 112,
+            "message": "Risco de superaquecimento"
+          },
+          "position": { "x": 13, "y": 62 }
         },
         {
           "id": "fuel_level",
@@ -215,8 +369,12 @@
           "min": 0,
           "max": 100,
           "simulation": "fuel_burn",
-          "alert": { "operator": "<", "threshold": 18, "message": "Programar pit stop para abastecimento" },
-          "position": { "x": 50, "y": 70 }
+          "alert": {
+            "operator": "<",
+            "threshold": 18,
+            "message": "Programar pit stop para abastecimento"
+          },
+          "position": { "x": 13, "y": 76 }
         },
         {
           "id": "tyre_pressure_fl",
@@ -229,7 +387,11 @@
           "max": 2.5,
           "target": 2.05,
           "simulation": "stable_noise",
-          "alert": { "operator": "<", "threshold": 1.7, "message": "Possivel pneu furado" },
+          "alert": {
+            "operator": "<",
+            "threshold": 1.7,
+            "message": "Possivel pneu furado"
+          },
           "position": { "x": 24, "y": 30 }
         },
         {
@@ -243,7 +405,11 @@
           "max": 2.5,
           "target": 2.05,
           "simulation": "stable_noise",
-          "alert": { "operator": "<", "threshold": 1.7, "message": "Possivel pneu furado" },
+          "alert": {
+            "operator": "<",
+            "threshold": 1.7,
+            "message": "Possivel pneu furado"
+          },
           "position": { "x": 76, "y": 30 }
         },
         {
@@ -257,7 +423,11 @@
           "max": 2.5,
           "target": 1.95,
           "simulation": "stable_noise",
-          "alert": { "operator": "<", "threshold": 1.7, "message": "Possivel pneu furado" },
+          "alert": {
+            "operator": "<",
+            "threshold": 1.7,
+            "message": "Possivel pneu furado"
+          },
           "position": { "x": 24, "y": 72 }
         },
         {
@@ -271,7 +441,11 @@
           "max": 2.5,
           "target": 1.95,
           "simulation": "stable_noise",
-          "alert": { "operator": "<", "threshold": 1.7, "message": "Possivel pneu furado" },
+          "alert": {
+            "operator": "<",
+            "threshold": 1.7,
+            "message": "Possivel pneu furado"
+          },
           "position": { "x": 76, "y": 72 }
         },
         {
@@ -285,7 +459,11 @@
           "max": 120,
           "target": 91,
           "simulation": "ramp_noise",
-          "alert": { "operator": ">", "threshold": 105, "message": "Pneu superaquecido" },
+          "alert": {
+            "operator": ">",
+            "threshold": 105,
+            "message": "Pneu superaquecido"
+          },
           "position": { "x": 18, "y": 38 }
         },
         {
@@ -299,7 +477,11 @@
           "max": 120,
           "target": 89,
           "simulation": "ramp_noise",
-          "alert": { "operator": ">", "threshold": 105, "message": "Pneu superaquecido" },
+          "alert": {
+            "operator": ">",
+            "threshold": 105,
+            "message": "Pneu superaquecido"
+          },
           "position": { "x": 82, "y": 38 }
         },
         {
@@ -313,7 +495,11 @@
           "max": 120,
           "target": 86,
           "simulation": "ramp_noise",
-          "alert": { "operator": ">", "threshold": 105, "message": "Pneu superaquecido" },
+          "alert": {
+            "operator": ">",
+            "threshold": 105,
+            "message": "Pneu superaquecido"
+          },
           "position": { "x": 18, "y": 80 }
         },
         {
@@ -327,7 +513,11 @@
           "max": 120,
           "target": 88,
           "simulation": "ramp_noise",
-          "alert": { "operator": ">", "threshold": 105, "message": "Pneu superaquecido" },
+          "alert": {
+            "operator": ">",
+            "threshold": 105,
+            "message": "Pneu superaquecido"
+          },
           "position": { "x": 82, "y": 80 }
         },
         {
@@ -341,8 +531,12 @@
           "max": 6.5,
           "target": 4.6,
           "simulation": "stable_noise",
-          "alert": { "operator": "<", "threshold": 2.4, "message": "Pressao de oleo baixa" },
-          "position": { "x": 50, "y": 56 }
+          "alert": {
+            "operator": "<",
+            "threshold": 2.4,
+            "message": "Pressao de oleo baixa"
+          },
+          "position": { "x": 13, "y": 90 }
         }
       ]
     },
@@ -361,8 +555,61 @@
           "frequency_ms": 250,
           "min": 95,
           "max": 325,
-          "simulation": "sinusoidal",
+          "simulation": "physics",
           "position": { "x": 50, "y": 18 }
+        },
+        {
+          "id": "throttle",
+          "label": "Acelerador",
+          "type": "throttle",
+          "unit": "%",
+          "topic": "car/3/throttle",
+          "frequency_ms": 100,
+          "min": 0,
+          "max": 100,
+          "simulation": "physics",
+          "position": { "x": 90, "y": 18 }
+        },
+        {
+          "id": "brake",
+          "label": "Freio",
+          "type": "brake",
+          "unit": "%",
+          "topic": "car/3/brake",
+          "frequency_ms": 100,
+          "min": 0,
+          "max": 100,
+          "simulation": "physics",
+          "position": { "x": 90, "y": 18 }
+        },
+        {
+          "id": "rpm",
+          "label": "RPM",
+          "type": "rpm",
+          "unit": "rpm",
+          "topic": "car/3/rpm",
+          "frequency_ms": 100,
+          "min": 3500,
+          "max": 7800,
+          "simulation": "physics",
+          "alert": {
+            "operator": ">",
+            "threshold": 7800,
+            "message": "RPM limite – risco de motor"
+          },
+          "position": { "x": 90, "y": 18 }
+        },
+        {
+          "id": "gear",
+          "label": "Marcha",
+          "type": "gear",
+          "unit": "",
+          "topic": "car/3/gear",
+          "frequency_ms": 100,
+          "min": 1,
+          "max": 7,
+          "simulation": "physics",
+          "position": { "x": 90, "y": 18 }
         },
         {
           "id": "engine_temp",
@@ -375,8 +622,12 @@
           "max": 134,
           "target": 101,
           "simulation": "ramp",
-          "alert": { "operator": ">", "threshold": 112, "message": "Risco de superaquecimento" },
-          "position": { "x": 50, "y": 42 }
+          "alert": {
+            "operator": ">",
+            "threshold": 112,
+            "message": "Risco de superaquecimento"
+          },
+          "position": { "x": 13, "y": 62 }
         },
         {
           "id": "fuel_level",
@@ -388,8 +639,12 @@
           "min": 0,
           "max": 100,
           "simulation": "fuel_burn",
-          "alert": { "operator": "<", "threshold": 18, "message": "Programar pit stop para abastecimento" },
-          "position": { "x": 50, "y": 70 }
+          "alert": {
+            "operator": "<",
+            "threshold": 18,
+            "message": "Programar pit stop para abastecimento"
+          },
+          "position": { "x": 13, "y": 76 }
         },
         {
           "id": "tyre_pressure_fl",
@@ -402,7 +657,11 @@
           "max": 2.5,
           "target": 2.15,
           "simulation": "stable_noise",
-          "alert": { "operator": "<", "threshold": 1.7, "message": "Possivel pneu furado" },
+          "alert": {
+            "operator": "<",
+            "threshold": 1.7,
+            "message": "Possivel pneu furado"
+          },
           "position": { "x": 24, "y": 30 }
         },
         {
@@ -416,7 +675,11 @@
           "max": 2.5,
           "target": 2.15,
           "simulation": "stable_noise",
-          "alert": { "operator": "<", "threshold": 1.7, "message": "Possivel pneu furado" },
+          "alert": {
+            "operator": "<",
+            "threshold": 1.7,
+            "message": "Possivel pneu furado"
+          },
           "position": { "x": 76, "y": 30 }
         },
         {
@@ -430,7 +693,11 @@
           "max": 2.5,
           "target": 2.0,
           "simulation": "stable_noise",
-          "alert": { "operator": "<", "threshold": 1.7, "message": "Possivel pneu furado" },
+          "alert": {
+            "operator": "<",
+            "threshold": 1.7,
+            "message": "Possivel pneu furado"
+          },
           "position": { "x": 24, "y": 72 }
         },
         {
@@ -444,7 +711,11 @@
           "max": 2.5,
           "target": 2.0,
           "simulation": "stable_noise",
-          "alert": { "operator": "<", "threshold": 1.7, "message": "Possivel pneu furado" },
+          "alert": {
+            "operator": "<",
+            "threshold": 1.7,
+            "message": "Possivel pneu furado"
+          },
           "position": { "x": 76, "y": 72 }
         },
         {
@@ -458,7 +729,11 @@
           "max": 120,
           "target": 87,
           "simulation": "ramp_noise",
-          "alert": { "operator": ">", "threshold": 105, "message": "Pneu superaquecido" },
+          "alert": {
+            "operator": ">",
+            "threshold": 105,
+            "message": "Pneu superaquecido"
+          },
           "position": { "x": 18, "y": 38 }
         },
         {
@@ -472,7 +747,11 @@
           "max": 120,
           "target": 89,
           "simulation": "ramp_noise",
-          "alert": { "operator": ">", "threshold": 105, "message": "Pneu superaquecido" },
+          "alert": {
+            "operator": ">",
+            "threshold": 105,
+            "message": "Pneu superaquecido"
+          },
           "position": { "x": 82, "y": 38 }
         },
         {
@@ -486,7 +765,11 @@
           "max": 120,
           "target": 85,
           "simulation": "ramp_noise",
-          "alert": { "operator": ">", "threshold": 105, "message": "Pneu superaquecido" },
+          "alert": {
+            "operator": ">",
+            "threshold": 105,
+            "message": "Pneu superaquecido"
+          },
           "position": { "x": 18, "y": 80 }
         },
         {
@@ -500,7 +783,11 @@
           "max": 120,
           "target": 86,
           "simulation": "ramp_noise",
-          "alert": { "operator": ">", "threshold": 105, "message": "Pneu superaquecido" },
+          "alert": {
+            "operator": ">",
+            "threshold": 105,
+            "message": "Pneu superaquecido"
+          },
           "position": { "x": 82, "y": 80 }
         },
         {
@@ -514,11 +801,14 @@
           "max": 6.5,
           "target": 4.9,
           "simulation": "stable_noise",
-          "alert": { "operator": "<", "threshold": 2.4, "message": "Pressao de oleo baixa" },
-          "position": { "x": 50, "y": 56 }
+          "alert": {
+            "operator": "<",
+            "threshold": 2.4,
+            "message": "Pressao de oleo baixa"
+          },
+          "position": { "x": 13, "y": 90 }
         }
       ]
     }
   ]
 }
-
