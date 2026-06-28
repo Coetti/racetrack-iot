@@ -10,6 +10,8 @@ import {
   YAxis,
 } from "recharts";
 
+// Local (Docker): ws://localhost:9001
+// HiveMQ Public Broker (sem Docker): ws://broker.hivemq.com:8000/mqtt
 const BROKER_URL = "ws://localhost:9001";
 const CONFIG_URL = "/sensors.json";
 const CHART_SENSOR_IDS = [
