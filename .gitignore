@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+
+dashboard/dist/
+dashboard/node_modules/
+
+.codex-runtime/

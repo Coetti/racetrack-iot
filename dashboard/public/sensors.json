@@ -87,7 +87,7 @@
             "threshold": 112,
             "message": "Risco de superaquecimento"
           },
-          "position": { "x": 13, "y": 48 }
+          "position": { "x": 13, "y": 62 }
         },
         {
           "id": "fuel_level",
@@ -104,7 +104,7 @@
             "threshold": 18,
             "message": "Programar pit stop para abastecimento"
           },
-          "position": { "x": 13, "y": 62 }
+          "position": { "x": 13, "y": 76 }
         },
         {
           "id": "tyre_pressure_fl",
@@ -266,7 +266,7 @@
             "threshold": 2.4,
             "message": "Pressao de oleo baixa"
           },
-          "position": { "x": 13, "y": 76 }
+          "position": { "x": 13, "y": 90 }
         }
       ]
     },
@@ -357,7 +357,7 @@
             "threshold": 112,
             "message": "Risco de superaquecimento"
           },
-          "position": { "x": 13, "y": 48 }
+          "position": { "x": 13, "y": 62 }
         },
         {
           "id": "fuel_level",
@@ -536,7 +536,7 @@
             "threshold": 2.4,
             "message": "Pressao de oleo baixa"
           },
-          "position": { "x": 13, "y": 62 }
+          "position": { "x": 13, "y": 90 }
         }
       ]
     },
@@ -627,7 +627,7 @@
             "threshold": 112,
             "message": "Risco de superaquecimento"
           },
-          "position": { "x": 13, "y": 48 }
+          "position": { "x": 13, "y": 62 }
         },
         {
           "id": "fuel_level",
@@ -644,7 +644,7 @@
             "threshold": 18,
             "message": "Programar pit stop para abastecimento"
           },
-          "position": { "x": 13, "y": 62 }
+          "position": { "x": 13, "y": 76 }
         },
         {
           "id": "tyre_pressure_fl",
@@ -806,7 +806,7 @@
             "threshold": 2.4,
             "message": "Pressao de oleo baixa"
           },
-          "position": { "x": 13, "y": 62 }
+          "position": { "x": 13, "y": 90 }
         }
       ]
     }
